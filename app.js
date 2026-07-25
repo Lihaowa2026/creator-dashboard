@@ -430,11 +430,38 @@ function analyzeProduct() {
 
 function extractProductInfo(input) {
   let name = input;
-  if (input.startsWith("http")) {
-    name = "链接商品";
-  } else {
-    name = input.length > 30 ? input.slice(0, 30) + "..." : input;
+
+  // 处理抖音分享文本：7.17 03/24 XZm:/ P@K.JI 【抖音商城】https://xxx 星目之源水润护眼喷雾...
+  // 提取最后一个链接后面的商品名
+  var urlMatch = input.match(/https?:\/\/[^\s]+/);
+  if (urlMatch) {
+    var urlEnd = input.lastIndexOf(urlMatch[0]) + urlMatch[0].length;
+    var afterUrl = input.substring(urlEnd).trim();
+    // 去掉前面的【抖音商城】等前缀
+    afterUrl = afterUrl.replace(/^[【\[][^】\]]+[】\]]\s*/, "").trim();
+    if (afterUrl.length > 0) {
+      name = afterUrl;
+    } else {
+      // 链接后面没有文字，尝试从链接前的文字提取
+      var beforeUrl = input.substring(0, input.indexOf(urlMatch[0])).trim();
+      // 去掉 7.17 03/24 XZm:/ P@K.JI 这类乱码
+      beforeUrl = beforeUrl.replace(/^[\d\.\s/:]+\S{2,8}\s+/g, "").trim();
+      beforeUrl = beforeUrl.replace(/^[【\[][^】\]]+[】\]]\s*/, "").trim();
+      if (beforeUrl.length > 0) {
+        name = beforeUrl;
+      } else {
+        name = "商品";
+      }
+    }
+  } else if (input.length > 30) {
+    name = input.slice(0, 30);
   }
+
+  // 截断过长的商品名，保留核心信息
+  if (name.length > 20) {
+    name = name.slice(0, 20);
+  }
+
   return { name: name, raw: input };
 }
 
