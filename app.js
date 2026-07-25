@@ -157,6 +157,44 @@ function toggleModule(name) {
   });
 }
 
+const plans = [
+  {
+    id: "zuodian-sleep",
+    name: "左点睡眠仪",
+    category: "美容仪器",
+    time: "2026-07-26",
+    summary: "失眠痛点+体检肝指标偏高+CES疗法+单人拍摄",
+    shots: [
+      "前3秒产品前置怼镜头",
+      "凌晨2:47失眠翻身",
+      "早醒看手机叹气",
+      "体检报告箭头向上",
+      "褪黑素+枕头快切",
+      "手指太阳穴字幕",
+      "夹耳夹特写",
+      "闭眼使用感受",
+      "产品完整空镜(无文案)",
+      "躺床画面渐暗",
+      "早上醒来伸懒腰",
+      "举产品促单",
+    ],
+    script: [
+      { shot: "前3秒·产品前置", text: "就是这个，夹耳朵上20分钟，我失眠大半年第一次睡了个整觉。", film: "手举主机怼镜头，另一只手夹耳夹演示", shoot: "云台正面中景，补光正前方" },
+      { shot: "痛点1", text: "你们不知道我之前多惨，困得眼睛睁不开，一躺下脑子突然精神，翻到两三点才迷迷糊糊睡着。", film: "凌晨手机显示2:47，睁眼躺床上翻身", shoot: "云台架床尾俯拍，暗光，手机亮屏" },
+      { shot: "痛点2", text: "最烦的是睡着了吧，睡俩仨小时突然就醒，一看手机才四点，干躺到天亮再也睡不着。", film: "突然睁眼看手机，叹气盯天花板", shoot: "云台侧面中景，暗光，动作放慢" },
+      { shot: "放大焦虑", text: "折腾了大半年，脸都黄了，体检直接查出肝功能俩指标偏高，医生说就是长期睡不好熬的，我当时真慌了。", film: "体检报告特写(模糊数值)，手指指箭头向上", shoot: "云台正面近景，手持报告，表情严肃" },
+      { shot: "排除其他方案", text: "褪黑素吃了没用，枕头床垫全换了还是没用，我快崩溃了。", film: "快闪褪黑素瓶、枕头2个空镜，1秒1个", shoot: "云台固定拍桌面，2个快切" },
+      { shot: "认知反转", text: "后来才知道，睡不着不是床的问题，是脑子里的神经刹不住车，身体累了脑子还在转。", film: "手指太阳穴，画面加字幕神经刹不住", shoot: "云台正面近景，补光正前方" },
+      { shot: "产品介绍", text: "这个左点睡眠仪，正经医疗器械，不是网红智商税，夹耳垂上，微电流传到脑子里，帮神经从兴奋慢慢松下来。", film: "夹耳夹特写，打湿垫圈→夹耳垂", shoot: "云台近景固定拍耳朵侧脸" },
+      { shot: "使用感受", text: "第一次用我怕被电，结果完全不会，就是耳朵那块酥酥麻麻的，挺舒服，像脑子在被人轻轻揉。", film: "闭眼夹耳夹，表情从紧张到放松", shoot: "云台正面近景，补光柔光" },
+      { shot: "产品空镜(无文案)", text: "（无文案·产品完整空镜）", film: "主机+耳夹线+生理盐水+便携包摆床上，云台缓推或环绕", shoot: "云台近景缓推或环绕，补光正前方，干净背景，5-8秒" },
+      { shot: "效果", text: "躺床上闭眼啥也不干，20分钟脑子里那些乱七八糟的事就慢慢没了，不知不觉就睡过去了。", film: "躺床上闭眼，画面从亮渐暗到全黑", shoot: "云台床尾俯拍，调暗补光灯" },
+      { shot: "效果验证", text: "现在睡前夹20分钟，一觉到天亮，复查指标也降下来了，整个人精神多了。", film: "早上醒来伸懒腰，阳光照进来", shoot: "云台正面中景，补光亮" },
+      { shot: "促单收尾", text: "姐妹们，失眠真别硬扛，伤的不光是觉，是整个身体，试试这个，比干熬着强多了。", film: "手拿主机+便携包对着镜头", shoot: "云台正面中景，举产品，真诚语气" },
+    ],
+  },
+];
+
 function render() {
   renderPlan();
   renderInspirations();
@@ -165,6 +203,7 @@ function render() {
   renderMemo();
   renderProduct();
   renderAnalyzeHistory();
+  renderPlans();
 }
 
 function renderPlan() {
@@ -947,6 +986,90 @@ function copyScript(id) {
       document.body.removeChild(textarea);
       alert("文案已复制");
     });
+}
+
+
+function renderPlans() {
+  var list = document.getElementById("plansList");
+  if (!list) return;
+  if (plans.length === 0) {
+    list.innerHTML = '<div class="empty-tip">还没有方案，发商品给我帮你写</div>';
+    return;
+  }
+  list.innerHTML = plans.map(function(p) {
+    return '<div class="plan-card" onclick="showPlan(\'' + p.id + '\')">' +
+      '<div class="plan-name">' + p.name + '</div>' +
+      '<div class="plan-summary">' + p.summary + '</div>' +
+      '<div class="plan-meta">' + p.time + ' · ' + p.shots.length + '个分镜</div>' +
+      '</div>';
+  }).join("");
+}
+
+function showPlan(id) {
+  var plan = plans.find(function(p) { return p.id === id; });
+  if (!plan) return;
+
+  var shotsHtml = plan.script.map(function(s, i) {
+    return '<div class="plan-shot">' +
+      '<div class="shot-num">第' + (i+1) + '句</div>' +
+      '<div class="shot-text">' + s.text + '</div>' +
+      '<div class="shot-detail"><strong>画面：</strong>' + s.film + '</div>' +
+      '<div class="shot-detail"><strong>拍法：</strong>' + s.shoot + '</div>' +
+      '</div>';
+  }).join("");
+
+  var html =
+    '<div class="result-modal" onclick="if(event.target===this)closeResult()">' +
+    '<div class="result-content">' +
+    '<div class="result-header">' +
+    '<div class="result-title">' + plan.name + '</div>' +
+    '<button class="result-close" onclick="closeResult()">×</button>' +
+    '</div>' +
+    '<div class="result-section">' +
+    '<div class="result-section-title">🎯 高转化画面清单</div>' +
+    plan.shots.map(function(s) { return '<div class="result-shot">• ' + s + '</div>'; }).join("") +
+    '</div>' +
+    '<div class="result-section">' +
+    '<div class="result-section-title">📝 带货文案（带分镜）</div>' +
+    shotsHtml +
+    '</div>' +
+    '<div class="result-actions">' +
+    '<button class="btn-save" onclick="copyPlanScript(\'' + plan.id + '\')">复制文案</button>' +
+    '<button class="btn-refresh" onclick="addPlanTask(\'' + plan.id + '\')">加入拍摄任务</button>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
+
+  var old = document.querySelector(".result-modal");
+  if (old) old.remove();
+  document.body.insertAdjacentHTML("beforeend", html);
+}
+
+function copyPlanScript(id) {
+  var plan = plans.find(function(p) { return p.id === id; });
+  if (!plan) return;
+  var text = plan.script.map(function(s) { return s.text; }).join("\n\n");
+  navigator.clipboard.writeText(text).then(function() {
+    alert("文案已复制");
+  }).catch(function() {
+    var textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    alert("文案已复制");
+  });
+}
+
+function addPlanTask(id) {
+  var plan = plans.find(function(p) { return p.id === id; });
+  if (!plan) return;
+  state.plan.push({ id: uid(), text: "拍摄：" + plan.name, done: false });
+  saveState();
+  closeResult();
+  toggleModule("plan");
+  alert("已加入拍摄任务");
 }
 
 // 事件监听
