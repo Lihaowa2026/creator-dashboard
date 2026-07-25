@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>创作工作台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-title">创作工作台</div>
+      <div class="header-date" id="todayDate"></div>
+    </header>
+
+    <main class="modules">
+      <!-- 每日计划 -->
+      <section class="module" data-module="plan">
+        <div class="module-bar active" onclick="toggleModule('plan')">
+          <span class="module-icon">🗒️</span>
+          <span class="module-name">每日计划</span>
+          <span class="module-badge" id="planBadge">0/0</span>
+          <span class="module-chevron">▼</span>
+        </div>
+        <div class="module-body" id="planBody">
+          <div class="task-input-row">
+            <input type="text" id="newTaskInput" placeholder="输入新任务，回车添加" />
+            <button class="btn-add" onclick="addTask()">+</button>
+          </div>
+          <ul class="task-list" id="planList"></ul>
+        </div>
+      </section>
+
+      <!-- 选题每日灵感 -->
+      <section class="module" data-module="inspiration">
+        <div class="module-bar" onclick="toggleModule('inspiration')">
+          <span class="module-icon">💡</span>
+          <span class="module-name">选题每日灵感</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="inspirationBody">
+          <div class="inspiration-list" id="inspirationList"></div>
+          <button class="btn-refresh" onclick="refreshInspirations()">换一批灵感</button>
+        </div>
+      </section>
+
+      <!-- 爆款热点视频/二创 -->
+      <section class="module" data-module="trending">
+        <div class="module-bar" onclick="toggleModule('trending')">
+          <span class="module-icon">🔥</span>
+          <span class="module-name">爆款热点视频/二创</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="trendingBody">
+          <div class="trending-list" id="trendingList"></div>
+          <button class="btn-refresh" onclick="refreshTrending()">刷新热点</button>
+        </div>
+      </section>
+
+      <!-- 选品参考 -->
+      <section class="module" data-module="product">
+        <div class="module-bar" onclick="toggleModule('product')">
+          <span class="module-icon">🛒</span>
+          <span class="module-name">选品参考</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="productBody">
+          <div class="product-tabs">
+            <button class="product-tab active" onclick="switchProductTab('tools')">选品工具</button>
+            <button class="product-tab" onclick="switchProductTab('forecast')">预爆品方向</button>
+            <button class="product-tab" onclick="switchProductTab('checklist')">选品自检</button>
+          </div>
+
+          <div class="product-panel" id="productToolsPanel">
+            <p class="panel-tip">实时销量/榜单数据需用以下工具查询，点链接直达</p>
+            <div class="tool-list" id="toolList"></div>
+          </div>
+
+          <div class="product-panel hidden" id="productForecastPanel">
+            <p class="panel-tip">按品类整理的近期预爆品方向，每周更新；具体爆品请用左侧工具查实时数据</p>
+            <div class="forecast-tabs">
+              <button class="forecast-tab active" onclick="switchForecastTab('beauty')">美容个护</button>
+              <button class="forecast-tab" onclick="switchForecastTab('digital')">3C百货</button>
+            </div>
+            <div class="forecast-list" id="forecastList"></div>
+          </div>
+
+          <div class="product-panel hidden" id="productChecklistPanel">
+            <p class="panel-tip">选品前过一遍这套清单，符合越多越值得带</p>
+            <div class="checklist" id="checklist"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 商品带货分析 -->
+      <section class="module" data-module="analyze">
+        <div class="module-bar" onclick="toggleModule('analyze')">
+          <span class="module-icon">🎬</span>
+          <span class="module-name">商品带货分析</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="analyzeBody">
+          <p class="panel-tip">粘贴商品链接/名称/截图描述，生成单人拍摄思路+带货文案</p>
+          <div class="analyze-input-row">
+            <textarea id="analyzeInput" rows="2" placeholder="例：戴森HD15吹风机 / 或粘贴商品链接"></textarea>
+          </div>
+          <button class="btn-save" onclick="analyzeProduct()">生成带货方案</button>
+          <div class="analyze-history">
+            <div class="analyze-history-title">已分析商品</div>
+            <div id="analyzeHistoryList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 内容复盘 -->
+      <section class="module" data-module="review">
+        <div class="module-bar" onclick="toggleModule('review')">
+          <span class="module-icon">📊</span>
+          <span class="module-name">内容复盘</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="reviewBody">
+          <div class="review-form">
+            <div class="form-row">
+              <label>播放量</label>
+              <input type="number" id="reviewViews" placeholder="0" />
+            </div>
+            <div class="form-row">
+              <label>点赞</label>
+              <input type="number" id="reviewLikes" placeholder="0" />
+            </div>
+            <div class="form-row">
+              <label>评论</label>
+              <input type="number" id="reviewComments" placeholder="0" />
+            </div>
+            <div class="form-row">
+              <label>转发</label>
+              <input type="number" id="reviewShares" placeholder="0" />
+            </div>
+            <div class="form-block">
+              <label>今日亮点</label>
+              <textarea id="reviewHighlights" rows="2" placeholder="写下今天表现最好的点..."></textarea>
+            </div>
+            <div class="form-block">
+              <label>存在问题</label>
+              <textarea id="reviewProblems" rows="2" placeholder="哪里做得不够好？"></textarea>
+            </div>
+            <div class="form-block">
+              <label>优化方向</label>
+              <textarea id="reviewOptimizations" rows="2" placeholder="下一步怎么改进？"></textarea>
+            </div>
+            <button class="btn-save" onclick="saveReview()">保存复盘</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 备忘录 -->
+      <section class="module" data-module="memo">
+        <div class="module-bar" onclick="toggleModule('memo')">
+          <span class="module-icon">📝</span>
+          <span class="module-name">备忘录</span>
+          <span class="module-chevron">▶</span>
+        </div>
+        <div class="module-body hidden" id="memoBody">
+          <textarea id="memoText" rows="6" placeholder="随手记下灵感、链接、待办..."></textarea>
+          <button class="btn-save" onclick="saveMemo()">保存备忘录</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      数据保存在本机，清空浏览器会丢失
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
