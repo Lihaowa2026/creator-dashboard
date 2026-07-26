@@ -871,3 +871,15 @@ body {
 .shot-detail strong {
   color: var(--text);
 }
+
+.btn-copy-input {
+  float: right;
+  border: 1px solid var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+}

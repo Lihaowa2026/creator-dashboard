@@ -450,21 +450,20 @@ function analyzeProduct() {
   }
 
   const product = extractProductInfo(input);
-  const plan = generatePlan(product);
 
   state.analyzeHistory.unshift({
     id: uid(),
     product: product.name,
     input: input,
-    plan: plan,
     time: new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),
+    status: "pending",
   });
-  if (state.analyzeHistory.length > 10) state.analyzeHistory.pop();
+  if (state.analyzeHistory.length > 20) state.analyzeHistory.pop();
 
   document.getElementById("analyzeInput").value = "";
   saveState();
 
-  showAnalyzeResult(state.analyzeHistory[0]);
+  alert("已提交！\n\n把这条商品发给我（在对话里），我帮你写定制方案。\n\n写好后会出现在下方「带货方案」模块里。");
 }
 
 function extractProductInfo(input) {
@@ -875,18 +874,37 @@ function getPlanTemplate(category, productName) {
 function renderAnalyzeHistory() {
   const list = document.getElementById("analyzeHistoryList");
   if (state.analyzeHistory.length === 0) {
-    list.innerHTML = '<div class="empty-tip">还没有分析过的商品</div>';
+    list.innerHTML = '<div class="empty-tip">还没有提交过的商品</div>';
     return;
   }
   list.innerHTML = state.analyzeHistory
     .map(
       (item) =>
-        '<div class="history-item" onclick="showAnalyzeResultById(\'' + item.id + '\')">' +
+        '<div class="history-item">' +
         '<div class="history-product">' + escapeHtml(item.product) + "</div>" +
-        '<div class="history-time">' + escapeHtml(item.time) + " · " + escapeHtml(item.plan.category) + "</div>" +
+        '<div class="history-time">' + escapeHtml(item.time) + " · 待写方案（发给我）" +
+        '<button class="btn-copy-input" onclick="copyInput(\'' + item.id + '\')">复制商品名</button>' +
+        "</div>" +
         "</div>"
     )
     .join("");
+}
+
+function copyInput(id) {
+  var item = state.analyzeHistory.find(function(h) { return h.id === id; });
+  if (!item) return;
+  var text = item.product;
+  navigator.clipboard.writeText(text).then(function() {
+    alert("已复制，去对话里发给我：\n\n" + text);
+  }).catch(function() {
+    var textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    alert("已复制，去对话里发给我：\n\n" + text);
+  });
 }
 
 function showAnalyzeResultById(id) {
