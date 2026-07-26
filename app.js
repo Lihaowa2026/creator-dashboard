@@ -159,6 +159,41 @@ function toggleModule(name) {
 
 const plans = [
   {
+    id: "yuchu-fulinggao",
+    name: "寓初祛湿茯苓膏",
+    category: "养生膏方",
+    time: "2026-07-26",
+    summary: "湿气重水肿痛点+舌苔厚+膏体拉丝+健脾祛湿+冲泡展示",
+    shots: [
+      "前3秒产品前置：手举膏瓶+勺子拉丝",
+      "早起脸肿+舌苔厚白",
+      "小肚子鼓+大腿松软",
+      "快闪红豆薏米茶、足贴、拔罐3个空镜",
+      "手指肚子字幕脾虚湿气排不出",
+      "手拿膏瓶指成分表",
+      "勺子挖膏拉丝特写",
+      "温水冲泡膏体化开",
+      "喝一口表情微皱后接受",
+      "产品完整空镜(无文案)",
+      "对镜拍腰腹效果",
+      "举产品促单",
+    ],
+    script: [
+      { shot: "前3秒·产品前置", text: "就这个，吃了俩星期，我早上起来脸不肿了，裤子腰围松了一圈。", film: "手举膏瓶+勺子怼镜头，膏体拉丝", shoot: "云台正面中景，补光正前方" },
+      { shot: "痛点1", text: "你们不知道我之前多惨，每天早上起来脸肿得跟馒头一样，照镜子舌苔厚厚一层白的，整个人像没睡醒。", film: "早起照镜子，展示脸肿+伸舌头拍舌苔", shoot: "云台正面近景，对着镜子拍，自然光" },
+      { shot: "放大焦虑", text: "最烦的是肚子鼓鼓的，明明没吃多少，小肚子一直下不去，大腿捏起来软趴趴的，全是松的。", film: "撩衣服看小肚子，手捏大腿", shoot: "云台侧面中景，拍腰腹+大腿" },
+      { shot: "排除其他方案", text: "红豆薏米茶喝了，足贴贴了，拔罐也试了，钱花了不少，该肿还是肿。", film: "快闪红豆薏米茶包、足贴、拔罐印3个空镜，1秒1个", shoot: "云台固定拍桌面，3个快切" },
+      { shot: "认知反转", text: "后来才知道，湿气不是表面排排就行的，得从脾胃里面调，脾虚了湿气就排不出去。", film: "手指肚子，画面加字幕脾虚湿气排不出", shoot: "云台正面近景，补光正前方" },
+      { shot: "产品介绍", text: "就是这个，寓初祛湿茯苓膏，里面有茯苓、山药、莲子、陈皮，都是药食同源的东西，不是乱七八糟的偏方。", film: "手拿膏瓶怼镜头，手指指成分表", shoot: "云台正面中景，手拿膏瓶" },
+      { shot: "膏体质感", text: "你们看这个膏体，特别浓稠，勺子挖起来能拉丝，这就说明料足，不是那种掺了糖水的稀货。", film: "勺子挖膏拉丝特写", shoot: "云台近景固定拍膏瓶+勺子" },
+      { shot: "冲泡展示", text: "吃法很简单，挖一勺温水冲开喝，或者直接含嘴里也行，味道是淡淡的中药香带点甜，不难喝。", film: "温水冲泡过程，膏体化开", shoot: "云台近景固定拍杯子操作" },
+      { shot: "口感+效果", text: "我每天早晚各一勺，喝了俩星期，最明显的感觉是早上起来脸没那么肿了，整个人轻快了，舌苔也薄了。", film: "喝一口，表情微皱然后接受", shoot: "云台正面近景，补光柔光" },
+      { shot: "产品空镜(无文案)", text: "（无文案·产品完整空镜）", film: "膏瓶+勺子+包装盒摆桌面，云台缓推", shoot: "云台近景缓推，干净背景，5秒" },
+      { shot: "效果验证", text: "小肚子也平了一些，不是一下就没了，但确实有变化，裤子没那么紧了。", film: "对镜自拍，拍腰腹", shoot: "云台侧面中景，对镜子拍" },
+      { shot: "促单收尾", text: "湿气重的姐妹真别光顾着外用了，试试从里面调，这个比喝茶贴足贴管用多了。", film: "手拿膏瓶+勺子对着镜头", shoot: "云台正面中景，举产品，真诚语气" },
+    ],
+  },
+  {
     id: "fushan-baifanqie",
     name: "芙山飘恋白番茄血橙饮料",
     category: "口服美容",
@@ -1085,6 +1120,18 @@ function showPlan(id) {
     '<div class="result-section">' +
     '<div class="result-section-title">📝 带货文案（带分镜）</div>' +
     shotsHtml +
+    '</div>' +
+    '<div class="result-section">' +
+    '<div class="result-section-title">📹 参考爆款视频</div>' +
+    '<div class="result-shot" style="margin-bottom:8px;">点击按钮搜索同款商品的带货视频参考</div>' +
+    '<div class="result-video-links">' +
+    '<a href="snssdk1128://search/result?keyword=' + encodeURIComponent(plan.name) + '" target="_blank">抖音搜索</a>' +
+    '<a href="snssdk1128://search/result?keyword=' + encodeURIComponent(plan.name + " 开箱") + '" target="_blank">抖音开箱</a>' +
+    '<a href="snssdk1128://search/result?keyword=' + encodeURIComponent(plan.name + " 真实体验") + '" target="_blank">抖音体验</a>' +
+    '<a class="xhs" href="xhsdiscover://search/result?keyword=' + encodeURIComponent(plan.name) + '" target="_blank">小红书</a>' +
+    '<a class="bili" href="bilibili://search?keyword=' + encodeURIComponent(plan.name + " 开箱") + '" target="_blank">B站</a>' +
+    '<a class="chanmama" href="https://www.chanmama.com/" target="_blank">蝉妈妈查销量</a>' +
+    '</div>' +
     '</div>' +
     '<div class="result-actions">' +
     '<button class="btn-save" onclick="copyPlanScript(\'' + plan.id + '\')">复制文案</button>' +
